@@ -53,11 +53,6 @@ namespace finalServeur.Controllers
                 return StatusCode(401, new { Message = "Please log in." });
             }
 
-            //TROUBLE -- CANT POST IMAGE IN MY TWEET
-
-            Picture picTweet = await _context.Picture.SingleOrDefaultAsync(p => p.TweetId == tweet.Id);
-
-            tweet.Picture = picTweet;
 
             tweet.Text += Environment.NewLine + "-" + user.UserName;
 

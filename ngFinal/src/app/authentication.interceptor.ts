@@ -23,7 +23,6 @@ export class AuthenticationInterceptor implements HttpInterceptor {
     else{
       request = request.clone({
         setHeaders : {
-          "Content-Type" : "application/json",
           "Authorization" : "Bearer " + localStorage.getItem("token")
         }
       });
