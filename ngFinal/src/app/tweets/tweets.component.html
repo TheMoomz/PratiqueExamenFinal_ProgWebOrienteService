@@ -1,0 +1,67 @@
+<div class="row">
+  <div class="col-auto justify-content-center text-center py-2">
+    <button (click)="displayNewTweet()">🐦💬 Nouveau tweet 💬🐦</button>
+    <hr style="border-width:2px; color:white; margin-bottom:10px;opacity:0.7;">
+    <h4>Utilisateurs du seed</h4>
+    <table>
+      <tr><td>Nom d'utilisateur</td><td>Mot de passe</td></tr>
+      <tr><td>Nicole</td><td>Salut1!</td></tr>
+      <tr><td>Solange</td><td>Salut1!</td></tr>
+      <tr><td>Fernando</td><td>Salut1!</td></tr>
+    </table>
+  </div>
+  <div class="col py-2">
+    <div *ngIf="displayNewTweetBox">
+      <h5>Nouveau tweet</h5>
+      <div class="newTweet">
+        <textarea (input)="updateLimit()" name="newTweetText" [(ngModel)]="newTweetText" rows="2" placeholder="Partagez ce qui vous vient à l'esprit !"></textarea>
+        <input #tweetImage type="file" name="tweetImage">
+        <span class="charLimit" [style.color]="charLimit < 50 ? 'red' : 'rgb(199, 199, 255)'">{{charLimit}}</span>
+        <span class="close" (click)="displayNewTweet()">❌</span>
+      </div>
+      <button (click)="createTweet(newTweetText)">Envoyer le Tweet 🐦📢</button>
+      <hr style="border-width:2px; color:white; margin-bottom:10px;opacity:0.7;">
+    </div>
+    <div class="tweetList">
+      <h5>Tweets</h5>
+      <span (click)="httpService.getMainTweets()">🔄</span>
+      <div *ngFor="let t of httpService.tweets">
+        <div class="row tweet">
+          <div class="col-auto text-center">
+            <!-- UPVOTE -->
+            <span (click)="httpService.upvoteTweet(t)">🔼</span><br>
+            {{t.score}}<br>
+            <!-- DOWNVOTE -->
+            <span (click)="httpService.downvoteTweet(t)">🔽</span>
+          </div>
+          <div (click)="openSubTweets(t.id)" class="col">{{t.text}}</div>
+          <div *ngIf="t.picture != null">
+            <img [src]="'http://localhost:5265/api/pictures/getpicture/'+t.picture.id" alt="Photo de tweet">
+          </div>
+        </div>
+        <div class="subTweets" *ngIf="t.id == chosenTweet">
+          <div *ngIf="httpService.subTweets.length == 0">
+            <div class="row tweet subtweet">
+              <div class="col" style="text-align:right;">
+                Soyez la première personne à répondre à ce Tweet !
+              </div>
+            </div>
+          </div>
+          <div class="row tweet subtweet" *ngFor="let s of httpService.subTweets">
+            <div class="col">{{s.text}}</div>
+          </div>
+          <div class="row subtweet">
+            <div class="col">
+              <div class="newTweet">
+                <textarea (input)="updateSubLimit()" name="newSubTweetText" [(ngModel)]="newSubTweetText" rows="2" placeholder="Donnez votre point de vue sur la discussion ..."></textarea>
+                <span class="charLimit" [style.color]="charLimit < 50 ? 'red' : 'rgb(199, 199, 255)'">{{subCharLimit}}</span>
+              </div>
+              <button (click)="httpService.postSubTweet(newSubTweetText, t.id)">Répondre au Tweet 🐦💬</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+  </div>
+</div>
