@@ -70,7 +70,9 @@ namespace finalServeur.Controllers
                 _context.Picture.Add(picture);
                 await _context.SaveChangesAsync();
             }
-            catch (Exception e) {}
+            catch (Exception e) {
+		return BadRequest();
+		}
             return Ok(new {Message = "Photo enregistrée sur le serveur !"});
         }
 
